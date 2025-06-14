@@ -2,10 +2,10 @@ import { resolve } from "path";
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  root: "src/",
-  base: "/",
-
+  root: "src", // Tells Vite to treat src/ as the root
   build: {
+    outDir: "../dist", // So dist/ ends up at the project root level
+    emptyOutDir: true,
     rollupOptions: {
       input: {
         main: resolve(__dirname, "src/index.html"),
