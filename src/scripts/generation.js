@@ -2,6 +2,10 @@ const generateBtn = document.getElementById("generateBtn");
 const seedOutput = document.getElementById("seedOutput");
 const output = document.getElementById("promptOutput");
 
+window.addEventListener("DOMContentLoaded", () => {
+  generateBtn.click();
+});
+
 generateBtn.addEventListener("click", async () => {
   output.textContent = "Thinking...";
 
@@ -71,7 +75,7 @@ generateBtn.addEventListener("click", async () => {
     }
 
     if (cohereData.generations && cohereData.generations.length > 0) {
-      output.textContent = cohereData.generations[0].text.trim();
+      output.textContent = "";
     } else {
       output.textContent = "No prompt generated.";
     }

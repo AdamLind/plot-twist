@@ -105,8 +105,9 @@ nav a {
 }
 
 .label {
-  font-size: 24px;
-  color: #ffe96b;
+  font-size: 20px;
+  color: white;
+  font-weight: 400;
   margin-bottom: 8px;
 }
 
@@ -129,4 +130,37 @@ nav a {
 .button-secondary:hover {
   background-color: #ffe96b;
   color: #080b2c;
+}
+
+.prompt-page {
+  display: flex;
+  gap: 40px;
+  justify-content: space-between;
+}
+
+.prompt-title {
+  font-size: 48px;
+  font-weight: 700;
+  color: #ffe96b;
+}
+
+.prompt-info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 40px;
+}
+
+.prompt-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 20px 0
+}
+
+.prompt-list li {
+  font-size: 24px;
+  font-weight: 600;
+  color: #ffe96b;
 }
