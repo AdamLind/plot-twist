@@ -11,11 +11,18 @@
     <header id="header"></header>
     <!-- Main content area -->
     <main class="prompt-page">
-      <section class="prompt-info">
-        <p id="promptOutput"></p>
+      <div id="customAlert" class="">Prompt saved!</div>
+      <div id="loading-messages" class="hidden">
+        <h1 id="promptOutput"></h1>
+        <h2>Seed Word: <span class="label" id="seedOutput"></span></h2>
+      </div>
+      <div id="spinner" class="hidden">
+        <!-- Simple spinner (CSS animation) -->
+        <div class="spinner"></div>
+      </div>
+      <section id="generatePage" class="prompt-info hidden">
         <h1 class="prompt-title" id="title">Prompt Title:</h1>
-        <ul class="prompt-list">
-          <li>Seed Word: <span class="label" id="seedOutput"></span></li>
+        <ul id="promptList" class="prompt-list">
           <li>Setting: <span class="label" id="setting"></span></li>
           <li>Point of View: <span class="label" id="point_of_view"></span></li>
           <li>Genre: <span class="label" id="genre"></span></li>
@@ -26,11 +33,13 @@
         </ul>
 
         <div class="button-group">
-          <button class="button" id="generateBtn">
-            Re-Generate Prompt
+          <button class="button" id="generateBtn">Generate Prompt</button>
+          <button class="button button-secondary" id="saveBtn">
+            Save Prompt
           </button>
-          <button class="button button-secondary">Save Prompt</button>
-          <button class="icon-btn" title="Copy Prompt"></button>
+          <button class="copy-btn" id="copyBtn" title="Copy Prompt">
+            <img src="/assets/images/copy.png" alt="Copy" />
+          </button>
         </div>
       </section>
 

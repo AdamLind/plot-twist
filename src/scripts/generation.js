@@ -1,22 +1,115 @@
+import { showAlert } from "./utils.mjs";
+// Ensure the DOM is fully loaded before running the script
+
 const generateBtn = document.getElementById("generateBtn");
 const seedOutput = document.getElementById("seedOutput");
 const output = document.getElementById("promptOutput");
+const saveBtn = document.getElementById("saveBtn");
+const copyBtn = document.getElementById("copyBtn");
+const promptContainer = document.getElementById("generatePage");
+const spinner = document.getElementById("spinner");
+const loadingText = document.getElementById("loading-messages");
 
 window.addEventListener("DOMContentLoaded", () => {
   generateBtn.click();
 });
 
+const loadingMessages = [
+  "Generating your prompt...",
+  "Please wait a moment...",
+  "Almost there...",
+  "Crafting your creative spark...",
+  "Finding the perfect words...",
+  "Just a few seconds more...",
+  "Loading your inspiration...",
+  "Preparing your unique prompt...",
+  "Creating a world of possibilities...",
+  "Your prompt is on its way...",
+  "Hold tight, creativity is brewing...",
+  "Generating a masterpiece for you...",
+];
+function getRandomLoadingMessage() {
+  const randomIndex = Math.floor(Math.random() * loadingMessages.length);
+  return loadingMessages[randomIndex];
+}
+
+let loadingInterval = null;
+
+function loading() {
+  promptContainer.classList.toggle("hidden", true);
+  spinner.classList.toggle("hidden", false);
+  loadingText.classList.toggle("hidden", false);
+  output.textContent = getRandomLoadingMessage();
+  loadingInterval = setInterval(() => {
+    output.textContent = getRandomLoadingMessage();
+  }, 5000);
+}
+
+function doneLoading() {
+  promptContainer.classList.toggle("hidden", false);
+  spinner.classList.toggle("hidden", true);
+  loadingText.classList.toggle("hidden", true);
+
+  clearInterval(loadingInterval);
+  loadingInterval = null;
+  output.textContent = "";
+}
+
+// Declare variables in a higher scope so they are accessible in event listeners
+let parsed = {};
+let sentence = parsed
+  ? `Title: ${parsed.title}\nSeed: ${parsed.seed}\nSetting: ${
+      parsed.setting
+    }\nPoint of View: ${parsed.point_of_view}\nGenre: ${parsed.genre}\nTone: ${
+      parsed.tone
+    }\nFirst Line: ${parsed.first_line}\nSummary: ${
+      parsed.summary
+    }\nKeywords: ${parsed.keywords?.join(", ")}`
+  : "";
+let wordSeed = "";
+
+// The rest of your code...
+
+copyBtn.addEventListener("click", () => {
+  if (sentence) {
+    navigator.clipboard.writeText(sentence).then(() => {
+      showAlert("Prompt copied to clipboard!");
+    });
+  }
+});
+
+saveBtn.addEventListener("click", () => {
+  if (parsed && wordSeed) {
+    const promptData = {
+      title: parsed.title,
+      setting: parsed.setting,
+      point_of_view: parsed.point_of_view,
+      genre: parsed.genre,
+      tone: parsed.tone,
+      first_line: parsed.first_line,
+      summary: parsed.summary,
+      keywords: parsed.keywords,
+      seed: wordSeed,
+      date: new Date().toISOString(),
+    };
+    console.log("Saving prompt data:", promptData);
+    const savedPrompts = JSON.parse(localStorage.getItem("prompts")) || [];
+    savedPrompts.push(promptData);
+    localStorage.setItem("prompts", JSON.stringify(savedPrompts));
+    showAlert("Prompt saved successfully!");
+  }
+});
+
 generateBtn.addEventListener("click", async () => {
-  output.textContent = "Thinking...";
+  loading();
 
   try {
     // Step 1: Get random word
-    const wordSeed = await fetch(
+    wordSeed = await fetch(
       "https://random-word-api.herokuapp.com/word?number=1"
     )
       .then((response) => response.json())
       .then((data) => {
-        console.log("Random word:", data[0]);
         seedOutput.textContent = data[0];
         const response = data[0];
         return response;
@@ -44,8 +137,8 @@ generateBtn.addEventListener("click", async () => {
           "first_line": "...",
           "summary": "...",
           "keywords": ["...", "..."]
-        }
-        Do not include any additional text or explanations. Each field should be concise to one short sentence. Response should not exceed 100 tokens.`,
+          }
+          Do not include any additional text or explanations. Each field should be concise to one short sentence. Response should not exceed 100 tokens.`,
 
         max_tokens: 200,
         temperature: 0.9,
@@ -54,8 +147,15 @@ generateBtn.addEventListener("click", async () => {
 
     const cohereData = await cohereResponse.json();
     try {
-      const parsed = await JSON.parse(cohereData.generations[0].text.trim());
-      console.log("Parsed JSON:", parsed);
+      parsed = JSON.parse(cohereData.generations[0].text.trim());
+
+      sentence = `Title: ${parsed.title}\nSeed: ${wordSeed}\nSetting: ${
+        parsed.setting
+      }\nPoint of View: ${parsed.point_of_view}\nGenre: ${
+        parsed.genre
+      }\nTone: ${parsed.tone}\nFirst Line: ${parsed.first_line}\nSummary: ${
+        parsed.summary
+      }\nKeywords: ${parsed.keywords?.join(", ")}`;
 
       // Update each element by ID
       document.getElementById("title").textContent = parsed.title || "N/A";
@@ -69,18 +169,21 @@ generateBtn.addEventListener("click", async () => {
       document.getElementById("summary").textContent = parsed.summary || "N/A";
       document.getElementById("keywords").textContent =
         (parsed.keywords && parsed.keywords.join(", ")) || "N/A";
+
+      doneLoading();
     } catch (e) {
       console.error("Error parsing JSON:", e);
       output.textContent = "Oops! AI returned invalid JSON.";
+      doneLoading();
+      return;
     }
 
-    if (cohereData.generations && cohereData.generations.length > 0) {
-      output.textContent = "";
-    } else {
+    if (!(cohereData.generations && cohereData.generations.length > 0)) {
       output.textContent = "No prompt generated.";
     }
   } catch (error) {
     console.error("Error:", error);
     output.textContent = "Failed to generate prompt.";
+    doneLoading();
   }
 });
