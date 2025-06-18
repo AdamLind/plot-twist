@@ -6,6 +6,12 @@ const historyList = document.getElementById("history-list");
 const savedPrompts = JSON.parse(localStorage.getItem("prompts")) || [];
 const clearHistoryBtn = document.getElementById("clear-history");
 
+function checkIfEmpty() {
+  if (historyList.children.length === 0) {
+    historyList.innerHTML = "<li>No saved prompts found.</li>";
+  }
+}
+
 clearHistoryBtn.addEventListener("click", () => {
   localStorage.removeItem("prompts");
   historyList.innerHTML = ""; // Clear the list in the DOM
@@ -13,16 +19,10 @@ clearHistoryBtn.addEventListener("click", () => {
   checkIfEmpty();
 });
 
-function checkIfEmpty() {
-  if (historyList.children.length === 0) {
-    historyList.innerHTML = "<li>No saved prompts found.</li>";
-  }
-}
-
 [...savedPrompts].reverse().forEach((prompt, index) => {
   const listItem = document.createElement("li");
   listItem.textContent = prompt.title;
-
+  
   const copyBtn = document.createElement("button");
   const copyIcon = document.createElement("img");
   copyIcon.src = copyIconPath;
@@ -56,12 +56,14 @@ function checkIfEmpty() {
     showAlert("Prompt deleted!");
     checkIfEmpty();
   });
-
+  
   const buttonContainer = document.createElement("div");
   buttonContainer.classList.add("history-button-container");
-
+  
   buttonContainer.appendChild(copyBtn);
   buttonContainer.appendChild(deleteBtn);
   listItem.appendChild(buttonContainer);
   historyList.appendChild(listItem);
 });
+
+checkIfEmpty();
