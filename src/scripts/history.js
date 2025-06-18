@@ -1,4 +1,6 @@
 import { showAlert } from "./utils.mjs";
+import copyIconPath from "../assets/images/copy.png";
+import deleteIconPath from "../assets/images/delete.png";
 
 const historyList = document.getElementById("history-list");
 const savedPrompts = JSON.parse(localStorage.getItem("prompts")) || [];
@@ -10,7 +12,7 @@ savedPrompts.forEach((prompt, index) => {
 
   const copyBtn = document.createElement("button");
   const copyIcon = document.createElement("img");
-  copyIcon.src = "/assets/images/copy.png";
+  copyIcon.src = copyIconPath;
   copyIcon.alt = "Copy Prompt";
   copyBtn.appendChild(copyIcon);
   copyBtn.classList.add("history-copy-button");
@@ -28,7 +30,7 @@ savedPrompts.forEach((prompt, index) => {
   });
   const deleteBtn = document.createElement("button");
   const deleteIcon = document.createElement("img");
-  deleteIcon.src = "/assets/images/delete.png";
+  deleteIcon.src = deleteIconPath;
   deleteIcon.alt = "Delete Prompt";
   deleteBtn.appendChild(deleteIcon);
   deleteBtn.classList.add("trash-button");
