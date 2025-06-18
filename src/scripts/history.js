@@ -10,12 +10,18 @@ clearHistoryBtn.addEventListener("click", () => {
   localStorage.removeItem("prompts");
   historyList.innerHTML = ""; // Clear the list in the DOM
   showAlert("History cleared!");
+  checkIfEmpty();
 });
 
-savedPrompts && savedPrompts.length > 0 ?
-  [...savedPrompts].reverse().forEach((prompt, index) => {
-    const listItem = document.createElement("li");
-    listItem.textContent = prompt.title;
+function checkIfEmpty() {
+  if (historyList.children.length === 0) {
+    historyList.innerHTML = "<li>No saved prompts found.</li>";
+  }
+}
+
+[...savedPrompts].reverse().forEach((prompt, index) => {
+  const listItem = document.createElement("li");
+  listItem.textContent = prompt.title;
 
   const copyBtn = document.createElement("button");
   const copyIcon = document.createElement("img");
@@ -33,6 +39,7 @@ savedPrompts && savedPrompts.length > 0 ?
     }\nSummary: ${prompt.summary}\nKeywords: ${prompt.keywords.join(", ")}`;
     navigator.clipboard.writeText(promptText).then(() => {
       showAlert("Prompt copied to clipboard!");
+      checkIfEmpty();
     });
   });
   const deleteBtn = document.createElement("button");
@@ -57,4 +64,4 @@ savedPrompts && savedPrompts.length > 0 ?
   buttonContainer.appendChild(deleteBtn);
   listItem.appendChild(buttonContainer);
   historyList.appendChild(listItem);
-}): historyList.innerHTML = "<li>No saved prompts found.</li>";
+});
