@@ -92,8 +92,15 @@ saveBtn.addEventListener("click", () => {
       seed: wordSeed,
       date: new Date().toISOString(),
     };
-    console.log("Saving prompt data:", promptData);
     const savedPrompts = JSON.parse(localStorage.getItem("prompts")) || [];
+    // Check for duplicate: same title and seed
+    const isDuplicate = savedPrompts.some(
+      (p) => p.title === promptData.title && p.seed === promptData.seed
+    );
+    if (isDuplicate) {
+      showAlert("This prompt is already saved.");
+      return;
+    }
     savedPrompts.push(promptData);
     localStorage.setItem("prompts", JSON.stringify(savedPrompts));
     showAlert("Prompt saved successfully!");

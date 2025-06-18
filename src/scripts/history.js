@@ -6,9 +6,16 @@ const historyList = document.getElementById("history-list");
 const savedPrompts = JSON.parse(localStorage.getItem("prompts")) || [];
 const clearHistoryBtn = document.getElementById("clear-history");
 
-savedPrompts.forEach((prompt, index) => {
-  const listItem = document.createElement("li");
-  listItem.textContent = prompt.title;
+clearHistoryBtn.addEventListener("click", () => {
+  localStorage.removeItem("prompts");
+  historyList.innerHTML = ""; // Clear the list in the DOM
+  showAlert("History cleared!");
+});
+
+savedPrompts && savedPrompts.length > 0 ?
+  [...savedPrompts].reverse().forEach((prompt, index) => {
+    const listItem = document.createElement("li");
+    listItem.textContent = prompt.title;
 
   const copyBtn = document.createElement("button");
   const copyIcon = document.createElement("img");
@@ -50,4 +57,4 @@ savedPrompts.forEach((prompt, index) => {
   buttonContainer.appendChild(deleteBtn);
   listItem.appendChild(buttonContainer);
   historyList.appendChild(listItem);
-});
+}): historyList.innerHTML = "<li>No saved prompts found.</li>";
