@@ -39,7 +39,6 @@ function checkIfEmpty() {
     }\nSummary: ${prompt.summary}\nKeywords: ${prompt.keywords.join(", ")}`;
     navigator.clipboard.writeText(promptText).then(() => {
       showAlert("Prompt copied to clipboard!");
-      checkIfEmpty();
     });
   });
   const deleteBtn = document.createElement("button");
@@ -55,6 +54,7 @@ function checkIfEmpty() {
     // Remove the list item from the DOM
     historyList.removeChild(listItem);
     showAlert("Prompt deleted!");
+    checkIfEmpty();
   });
 
   const buttonContainer = document.createElement("div");
