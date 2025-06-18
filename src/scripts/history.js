@@ -9,7 +9,10 @@ savedPrompts.forEach((prompt, index) => {
   listItem.textContent = prompt.title;
 
   const copyBtn = document.createElement("button");
-  copyBtn.innerHTML = "<img src='/assets/images/copy.png' alt='Copy Prompt'>";
+  const copyIcon = document.createElement("img");
+  copyIcon.src = "/assets/images/copy.png";
+  copyIcon.alt = "Copy Prompt";
+  copyBtn.appendChild(copyIcon);
   copyBtn.classList.add("history-copy-button");
   copyBtn.addEventListener("click", () => {
     const promptText = `Title: ${prompt.title}\nSeed: ${
@@ -24,8 +27,10 @@ savedPrompts.forEach((prompt, index) => {
     });
   });
   const deleteBtn = document.createElement("button");
-  deleteBtn.innerHTML =
-    "<img src='/assets/images/delete.png' alt='Delete Prompt'>";
+  const deleteIcon = document.createElement("img");
+  deleteIcon.src = "/assets/images/delete.png";
+  deleteIcon.alt = "Delete Prompt";
+  deleteBtn.appendChild(deleteIcon);
   deleteBtn.classList.add("trash-button");
   deleteBtn.addEventListener("click", () => {
     // Remove the prompt from localStorage
